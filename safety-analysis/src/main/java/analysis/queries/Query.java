@@ -1,6 +1,6 @@
 package analysis.queries;
 
-import analyis.util.Result;
+import analysis.util.Result;
 
 public interface Query{
 
