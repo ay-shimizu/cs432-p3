@@ -1,4 +1,6 @@
 package analysis.queries;
+import analysis.util.Helper;
+import analysis.util.Result;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClients;
@@ -38,8 +40,9 @@ public class NumCrimesQuery implements Query{
     // String result = "";
     Result result = new Result();
 
-    if(!validYear(input)){
-      result = "ERROR: Invalid input. Please input in a year between 2010 and 2019";
+    if(!Helper.isValidYear(input)){
+      result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019");
+      // System.out.println("ERROR HERE");
       return result;
     }
 

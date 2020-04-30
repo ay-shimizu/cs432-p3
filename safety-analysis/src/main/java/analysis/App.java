@@ -1,6 +1,6 @@
 package analysis;
 import analysis.window.UserInterface;
-import analysis.queries.Query;
+import analysis.queries.QueryProcessor;
 import analysis.queries.QNames;
 
 //ref: http://mongodb.github.io/mongo-java-driver/4.0/driver/getting-started/quick-start/
@@ -84,7 +84,7 @@ public class App
         //MongoCollection instances are immutable
         MongoCollection<Document> collectionA = database.getCollection("Arrest");
 
-        QueryProcessor qp = new QueryProcessor(mongoClient, database, collection);
+        QueryProcessor qp = new QueryProcessor(mongoClient, database, collectionC);
 
         UserInterface ui = new UserInterface(qp);
         // q.process(QNames.NUM_CRIMES);
@@ -97,9 +97,9 @@ public class App
         // Document query = new Document("_id", new Document("$lt", 100));
         // long count = collection.count()
 
-        mostCommonTypeOfCrime(collectionC, "Date Occurred", "2010");
-        mostCommonTypeOfCrime(collectionC, "Area Name", "Newton");
-        demographicInfo(collectionA, "Date Occurred", "2010");
-        demographicInfo(collectionA, "Area Name", "Newton");
+        // mostCommonTypeOfCrime(collectionC, "Date Occurred", "2010");
+        // mostCommonTypeOfCrime(collectionC, "Area Name", "Newton");
+        // demographicInfo(collectionA, "Date Occurred", "2010");
+        // demographicInfo(collectionA, "Area Name", "Newton");
     }
 }

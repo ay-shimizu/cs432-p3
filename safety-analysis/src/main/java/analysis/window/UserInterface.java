@@ -1,13 +1,14 @@
 package analysis.window;
-import analysis.queries.Query;
+import analysis.queries.QueryProcessor;
 import analysis.queries.QNames;
+import analysis.util.Result;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class UserInterface{
-  private Query query;
+  private QueryProcessor queryP;
 
   private JFrame mainframe;
   private JLabel header;
@@ -15,8 +16,8 @@ public class UserInterface{
   private JPanel controlPanel;
   private JScrollPane outputPanel;
 
-  public UserInterface(Query qIn){
-    query = qIn;
+  public UserInterface(QueryProcessor qIn){
+    queryP = qIn;
     setGUI();
   }
 
@@ -71,7 +72,11 @@ public class UserInterface{
     q1Button.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             String input = q1Input.getText();
-            String result = query.process(QNames.NUM_CRIMES, input);
+            Result r = queryP.process(QNames.NUM_CRIMES, input);
+            if(r == null){
+              System.out.println("ERROR HERE IN UI");
+            }
+            String result = r.toString();
             textLabel.setText(result);
          }
       });
@@ -94,7 +99,7 @@ public class UserInterface{
       q2Button.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
               String input = q2Input.getText();
-              String result = query.process(QNames.HIGHEST_CRIMES, input);
+              String result = queryP.process(QNames.HIGHEST_CRIMES, input).toString();
               textLabel.setText(result);
            }
         });
