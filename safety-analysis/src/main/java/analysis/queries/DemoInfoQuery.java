@@ -28,10 +28,10 @@ import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NumCrimesQuery implements Query{
+public class DemoInfoQuery implements Query{
   private MongoCollection<Document> collection;
 
-  public NumCrimesQuery(MongoCollection<Document> collectionIn){
+  public DemoInfoQuery(MongoCollection<Document> collectionIn){
     collection = collectionIn;
   }
 
@@ -45,23 +45,30 @@ public class NumCrimesQuery implements Query{
       return result;
     }
 
-    String regString = input + ".";
-
     Document regQuery = new Document();
-      regQuery.append("$regex", regString);
+      regQuery.append("$regex", input);
       regQuery.append("$options", "i");
 
-    Document findQuery = new Document();
-      findQuery.append("Date Occurred", regQuery);
+      AggregateIterable<Document> output = collection.aggregate(
+          Arrays.asList(
+                 Aggregates.match(Filters.eq(option, regQuery)),
+                 Aggregates.project(fields(include(""), excludeId())),
+                 Aggregates.group("$Sex Code", Accumulators.sum("count", 1)),
+                 Aggregates.sort(orderBy(descending("count")))
+          )
+      );
 
-    int count =  (int) collection.countDocuments(findQuery);
+        result.add("Search by " + option + ": \n");
+        int i = 1;
+        for(Document d : output){
+           //System.out.println(d.toJson());
+           result.add(d.get(i) + ") " + "Sex: " + d.get("_id") + "): " + d.get("count") + " crime reports\n");
+          i++;
+        }
+       return result;
+    }
 
-    // System.out.println("COUNT: " + count);
-    result.add("The total number of crime reported in " + input + " is: " + count);
-    return result;
-  }
-
-  public String toString(){
-    return "";
-  }
+    public String toString(){
+      return "";
+    }
 }

@@ -84,7 +84,7 @@ public class App
         //MongoCollection instances are immutable
         MongoCollection<Document> collectionA = database.getCollection("Arrest");
 
-        QueryProcessor qp = new QueryProcessor(mongoClient, database, collectionC);
+        QueryProcessor qp = new QueryProcessor(collectionC, collectionA);
 
         UserInterface ui = new UserInterface(qp);
         // q.process(QNames.NUM_CRIMES);

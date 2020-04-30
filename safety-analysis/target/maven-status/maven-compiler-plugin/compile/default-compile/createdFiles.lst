@@ -1,0 +1,14 @@
+analysis\App.class
+analysis\window\testListener.class
+analysis\queries\QueryProcessor$1.class
+analysis\queries\CommonCrimesQuery.class
+analysis\queries\Query.class
+analysis\queries\NumCrimesQuery.class
+analysis\window\UserInterface.class
+analysis\window\UserInterface$1.class
+analysis\util\Helper.class
+analysis\window\UserInterface$2.class
+analysis\queries\DemoInfoQuery.class
+analysis\queries\QueryProcessor.class
+analysis\queries\QNames.class
+analysis\util\Result.class
