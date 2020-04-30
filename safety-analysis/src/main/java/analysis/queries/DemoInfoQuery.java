@@ -58,7 +58,7 @@ public class DemoInfoQuery implements Query{
           )
       );
 
-        result.add("Search by " + option + ": \n");
+        result.add("Search by " + option + " ("+ input + ") : \n");
         int i = 1;
         for(Document d : output){
            //System.out.println(d.toJson());
