@@ -129,4 +129,57 @@ public class Query{
     result = "The total number of crime reported in " + input + " is: " + count;
     return result;
   }
+
+
+public static void mostCommonTypeOfCrime(MongoCollection<Document> collection, String option, String userInput){
+
+ //ref: https://stackoverflow.com/questions/31643109/mongodb-aggregation-with-java-driver
+ //ref: https://mongodb.github.io/mongo-java-driver/3.6/driver/tutorials/aggregation/
+
+ Document regQuery = new Document();
+   regQuery.append("$regex", userInput);
+   regQuery.append("$options", "i");
+
+ AggregateIterable<Document> output = collection.aggregate(
+     Arrays.asList(
+             Aggregates.match(Filters.eq(option, regQuery)),
+             Aggregates.project(fields(include("Crime Code", "Crime Code Description"), excludeId())),
+             Aggregates.group("$Crime Code", Accumulators.sum("count", 1), Accumulators.first("Crime Code Description", "$Crime Code Description")),
+             Aggregates.sort(orderBy(descending("count")))
+     )
+   );
+
+   System.out.println("Search by " + option + ": \n");
+   int i = 1;
+   for(Document d : output){
+     // System.out.println(d.toJson());
+     System.out.println(i + ")" + d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): " + d.get("count") + " crime reports\n");
+     i++;
+  }
+}
+
+public static void demographicInfo(MongoCollection<Document> collection, String option, String userInput){
+
+   Document regQuery = new Document();
+     regQuery.append("$regex", userInput);
+     regQuery.append("$options", "i");
+
+   AggregateIterable<Document> output = collection.aggregate(
+       Arrays.asList(
+               Aggregates.match(Filters.eq(option, regQuery)),
+               Aggregates.project(fields(include("Victim Sex"), excludeId())),
+               Aggregates.group("$Victim Sex", Accumulators.sum("count", 1)),
+               Aggregates.sort(orderBy(descending("count")))
+       )
+     );
+
+     System.out.println("Search by " + option + ": \n");
+     int i = 1;
+     for(Document d : output){
+       // System.out.println(d.toJson());
+       System.out.println(i + ")" + " (Victim Sex: " + d.get("_id") + "): " + d.get("count") + " crime reports\n");
+       i++;
+     }
+}
+
 }
