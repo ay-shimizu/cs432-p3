@@ -76,6 +76,32 @@ public class Query{
     return true;
   }
 
+
+    public String calculateSafety(String input){
+      String result = "";
+      //TO DO: Error check, input should be an Area ID
+
+      AggregateIterable<Document> output = collection.aggregate(
+          Arrays.asList(
+                Aggregates.match(Filters.regex("Date Occurred", input+".")),
+                  Aggregates.project(fields(include("Crime Code", "Crime Code Description"), excludeId())),
+                  Aggregates.group("$Crime Code", Accumulators.sum("count", 1), Accumulators.first("description", "$Crime Code Description")),
+                  Aggregates.sort(orderBy(descending("count")))
+          )
+        );
+
+        int i = 1;
+        for(Document d : output){
+          System.out.println(d.toJson());
+          //oof, inefficient
+          // result = result + i + ")" + d.get("Area Name") + " (id." + d.get("_id") + "): " + d.get("count") + " crime reports <br><br>";
+          // i++;
+        }
+
+        return result;
+
+    }
+
   public String highestCrimes(String input){
     String result = "";
 
