@@ -16,8 +16,7 @@ import com.mongodb.Block;
 import com.mongodb.DBObject;
 import com.mongodb.client.AggregateIterable;
 
-import com.mongodb.client.MongoCursor;
-import static com.mongodb.client.model.Filters.*;
+import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Projections.*;
 import com.mongodb.client.model.Aggregates;
 import static com.mongodb.client.model.Sorts.*;
@@ -29,19 +28,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QueryProcessor{
-  private MongoClient mongoClient;
-  private MongoDatabase database;
-  private MongoCollection<Document> collection;
+  private MongoCollection<Document> collectionCrime;
+  private MongoCollection<Document> collectionArrest;
+  private String option;
 
-  public QueryProcessor(MongoClient mongoClientIn, MongoDatabase databaseIn, MongoCollection<Document> collectionIn){
-    mongoClient = mongoClientIn;
-    database = databaseIn;
-    collection = collectionIn;
+  public QueryProcessor(MongoCollection<Document> collCrimeIn, MongoCollection<Document> collArrestIn){
+    collectionCrime = collCrimeIn;
+    collectionArrest = collArrestIn;
   }
 
-  public void setCollection(MongoCollection<Document> collectionIn){
-    collection = collectionIn;
-  }
+  //public void setCollection(MongoCollection<Document> collectionIn){
+  //  collection = collectionIn;
+  //}
 
   public Result process(QNames type, String input){
     Result result = null;
@@ -49,17 +47,28 @@ public class QueryProcessor{
 
     switch(type){
       case NUM_CRIMES:
-        q = new NumCrimesQuery(collection);
-        break;
-      // case COMMON_CRIMES:
-      //   q = new CommonCrimesQuery(collection);
-      //   break
+          q = new NumCrimesQuery(collectionCrime);
+          option = "";
+          break;
+      case COMMON_CRIMES_YEAR:
+          q = new CommonCrimesQuery(collectionCrime);
+          option = "Date Occurred";
+          break;
+      case COMMON_CRIMES_AREA:
+          q = new CommonCrimesQuery(collectionCrime);
+          option = "Area Name";
+          break;
       // case HIGHEST_CRIMES:
       //   q = new HighestCrimesQuery(collection);
       //   break;
-      // case DEMO_INFO:
-      //   q= new DemoInfoQuery(collection);
-      //   break;
+      case DEMO_INFO_YEAR:
+          q = new DemoInfoQuery(collectionArrest);
+          option = "Date Occurred";
+          break;
+      case DEMO_INFO_AREA:
+          q = new DemoInfoQuery(collectionArrest);
+          option = "Area Name";
+          break;
       // case DEMO_FUTURE:
       //   q = new DemoFutureQuery(collection);
       //   break;
@@ -77,7 +86,7 @@ public class QueryProcessor{
     }
 
     if(q != null){
-        result = q.process(input);
+        result = q.process(input, option);
     }else{
       result = new Result("ERROR: NULL VALUE");
     }
@@ -167,56 +176,5 @@ public class QueryProcessor{
   //   return result;
   // }
 
-//
-// public static void mostCommonTypeOfCrime(MongoCollection<Document> collection, String option, String userInput){
-//
-//  //ref: https://stackoverflow.com/questions/31643109/mongodb-aggregation-with-java-driver
-//  //ref: https://mongodb.github.io/mongo-java-driver/3.6/driver/tutorials/aggregation/
-//
-//  Document regQuery = new Document();
-//    regQuery.append("$regex", userInput);
-//    regQuery.append("$options", "i");
-//
-//  AggregateIterable<Document> output = collection.aggregate(
-//      Arrays.asList(
-//              Aggregates.match(Filters.eq(option, regQuery)),
-//              Aggregates.project(fields(include("Crime Code", "Crime Code Description"), excludeId())),
-//              Aggregates.group("$Crime Code", Accumulators.sum("count", 1), Accumulators.first("Crime Code Description", "$Crime Code Description")),
-//              Aggregates.sort(orderBy(descending("count")))
-//      )
-//    );
-//
-//    System.out.println("Search by " + option + ": \n");
-//    int i = 1;
-//    for(Document d : output){
-//      // System.out.println(d.toJson());
-//      System.out.println(i + ")" + d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): " + d.get("count") + " crime reports\n");
-//      i++;
-//   }
-// }
-//
-// public static void demographicInfo(MongoCollection<Document> collection, String option, String userInput){
-//
-//    Document regQuery = new Document();
-//      regQuery.append("$regex", userInput);
-//      regQuery.append("$options", "i");
-//
-//    AggregateIterable<Document> output = collection.aggregate(
-//        Arrays.asList(
-//                Aggregates.match(Filters.eq(option, regQuery)),
-//                Aggregates.project(fields(include("Victim Sex"), excludeId())),
-//                Aggregates.group("$Victim Sex", Accumulators.sum("count", 1)),
-//                Aggregates.sort(orderBy(descending("count")))
-//        )
-//      );
-//
-//      System.out.println("Search by " + option + ": \n");
-//      int i = 1;
-//      for(Document d : output){
-//        // System.out.println(d.toJson());
-//        System.out.println(i + ")" + " (Victim Sex: " + d.get("_id") + "): " + d.get("count") + " crime reports\n");
-//        i++;
-//      }
-// }
 
 }
