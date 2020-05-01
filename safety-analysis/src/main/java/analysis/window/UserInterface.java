@@ -272,7 +272,7 @@ public class UserInterface{
         controlPanel.add(q6Input);
         controlPanel.add(q6Button);
 
-        q5Button.addActionListener(new ActionListener() {
+        q6Button.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e) {
                 String input = q6Input.getText();
                 Result r = queryP.process(QNames.OFFEND_STATS, input);
