@@ -51,39 +51,39 @@ public class QueryProcessor{
 
         q = new NumCrimesQuery(collection);
         break;
-        
+
       case COMMON_CRIMES_YEAR:
         q = new CommonCrimesQuery(collectionCrime);
         option = "Date Occurred";
         break;
-        
+
        case COMMON_CRIMES_AREA:
         q = new CommonCrimesQuery(collectionCrime);
         option = "Area ID";
         break;
-        
+
       case HIGHEST_CRIMES:
         q = new HighestCrimesQuery(collection);
         break;
-        
+
        case DEMO_INFO_YEAR:
           q = new DemoInfoQuery(collectionArrest);
           option = "Arrest Date";
           break;
-        
+
       case DEMO_INFO_AREA:
           q = new DemoInfoQuery(collectionArrest);
           option = "Area ID";
           break;
-        
+
       case DEMO_FUTURE:
          q = new DemoFutureQuery(collectionArrest);
          break;
-        
+
        case OFFEND_STATS:
          q = new OffendStatsQuery(collectionArrest);
          break;
-        
+
       case SAFETY_VAL:
         q = new SafetyValQuery(collection);
         break;
