@@ -1,6 +1,7 @@
 package analysis.queries;
 import analysis.util.Result;
 
+//ref: api for 4.0 Java driver: https://mongodb.github.io/mongo-java-driver/4.0/apidocs/mongodb-driver-sync/com/mongodb/client/package-summary.html
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
@@ -47,37 +48,46 @@ public class QueryProcessor{
 
     switch(type){
       case NUM_CRIMES:
-          q = new NumCrimesQuery(collectionCrime);
-          option = "";
-          break;
+
+        q = new NumCrimesQuery(collection);
+        break;
+        
       case COMMON_CRIMES_YEAR:
-          q = new CommonCrimesQuery(collectionCrime);
-          option = "Date Occurred";
-          break;
-      case COMMON_CRIMES_AREA:
-          q = new CommonCrimesQuery(collectionCrime);
-          option = "Area ID";
-          break;
-      // case HIGHEST_CRIMES:
-      //   q = new HighestCrimesQuery(collection);
-      //   break;
-      case DEMO_INFO_YEAR:
+        q = new CommonCrimesQuery(collectionCrime);
+        option = "Date Occurred";
+        break;
+        
+       case COMMON_CRIMES_AREA:
+        q = new CommonCrimesQuery(collectionCrime);
+        option = "Area ID";
+        break;
+        
+      case HIGHEST_CRIMES:
+        q = new HighestCrimesQuery(collection);
+        break;
+        
+       case DEMO_INFO_YEAR:
           q = new DemoInfoQuery(collectionArrest);
           option = "Arrest Date";
           break;
+        
       case DEMO_INFO_AREA:
           q = new DemoInfoQuery(collectionArrest);
           option = "Area ID";
           break;
+        
       case DEMO_FUTURE:
          q = new DemoFutureQuery(collectionArrest);
          break;
+        
        case OFFEND_STATS:
          q = new OffendStatsQuery(collectionArrest);
          break;
-      // case SAFETY_VAL:
-      //   q = new SafetyValQuery(collection);
-      //   break;
+        
+      case SAFETY_VAL:
+        q = new SafetyValQuery(collection);
+        break;
+
       // case SAFETY_VAL_FUTURE:
       //   q = new SafetyValFuture(collection);
         // break;
@@ -122,59 +132,7 @@ public class QueryProcessor{
   //
   //   }
   //
-  // public String highestCrimes(String input){
-  //   String result = "";
-  //
-  //   if(!validYear(input)){
-  //     result = "ERROR: Invalid input. Please input in a year between 2010 and 2019";
-  //     return result;
-  //   }
-  //
-  //   //ref: https://stackoverflow.com/questions/31643109/mongodb-aggregation-with-java-driver
-  //   //ref: https://mongodb.github.io/mongo-java-driver/3.6/driver/tutorials/aggregation/
-  //   AggregateIterable<Document> output = collection.aggregate(
-  //       Arrays.asList(
-  //               Aggregates.project(fields(include("Area ID", "Area Name"), excludeId())),
-  //               Aggregates.group("$Area ID", Accumulators.sum("count", 1), Accumulators.first("Area Name", "$Area Name")),
-  //               Aggregates.sort(orderBy(descending("count")))
-  //       )
-  //     );
-  //
-  //     result = "<html>";
-  //     int i = 1;
-  //     for(Document d : output){
-  //       // System.out.println(d.toJson());
-  //       //oof, inefficient
-  //       result = result + i + ")" + d.get("Area Name") + " (id." + d.get("_id") + "): " + d.get("count") + " crime reports <br><br>";
-  //       i++;
-  //     }
-  //
-  //     return result + " </html>";
-  // }
 
-  // public String numCrimes(String input){
-  //   String result = "";
-  //
-  //   if(!validYear(input)){
-  //     result = "ERROR: Invalid input. Please input in a year between 2010 and 2019";
-  //     return result;
-  //   }
-  //
-  //   String regString = input + ".";
-  //
-  //   Document regQuery = new Document();
-  //     regQuery.append("$regex", regString);
-  //     regQuery.append("$options", "i");
-  //
-  //   Document findQuery = new Document();
-  //     findQuery.append("Date Occurred", regQuery);
-  //
-  //   int count =  (int) collection.countDocuments(findQuery);
-  //
-  //   // System.out.println("COUNT: " + count);
-  //   result = "The total number of crime reported in " + input + " is: " + count;
-  //   return result;
-  // }
 
 
 }

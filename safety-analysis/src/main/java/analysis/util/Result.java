@@ -23,13 +23,13 @@ public class Result{
     return results.size();
   }
 
-  public String toString(){
-    String result = "";
+  public String toTextString(){
+    String result = "<html>";
     for(String s : results){
-      result = result + s + "\n";
+      result = result + s + "<br><br>";
     }
 
-    return result;
+    return result + "</html>";
   }
 
 
