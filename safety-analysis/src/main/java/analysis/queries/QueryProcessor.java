@@ -58,6 +58,7 @@ public class QueryProcessor{
           q = new NumCrimesQuery(collectionCrime);
           option = "";
           break;
+
       case COMMON_CRIMES_YEAR:
         q = new CommonCrimesQuery(collectionCrime);
         option = "Date Occurred";
@@ -91,12 +92,13 @@ public class QueryProcessor{
          break;
 
       case SAFETY_VAL:
-        q = new SafetyValQuery(collectionArrest);
+        q = new SafetyValQuery(collectionCrime);
+
         break;
 
-      // case SAFETY_VAL_FUTURE:
-      //   q = new SafetyValFuture(collection);
-        // break;
+      case SAFETY_VAL_FUTURE:
+        q = new SafetyValFutureQuery(collectionCrime);
+        break;
       default:
         System.out.println("DEFAULT");
     }

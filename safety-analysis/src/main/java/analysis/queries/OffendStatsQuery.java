@@ -24,7 +24,7 @@ public class OffendStatsQuery implements Query{
     collection = collectionIn;
   }
 
-  public Result process(String input, String option){
+  public Result process(String input){
     Result result = new Result();
 
     if(!Helper.isValidYear(input)){
@@ -51,6 +51,7 @@ public class OffendStatsQuery implements Query{
 
   public String getResult(List<ArrayList<String>> staticPoint){
     String data = "";
+
     data += "Max age: " + staticPoint.get(0).get(0) + "  \n";
     data += "Min age: " + staticPoint.get(staticPoint.size()-1).get(0) + "  \n";
 

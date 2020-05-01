@@ -45,6 +45,7 @@ public class DemoFutureQuery implements Query{
     result.add("Year in (" + input + ") Arrest Type (O) percentage order by Age: \n" + processHelperAge(input, "O") + "\n");
     result.add("Year in (" + input + ") Arrest Type (D) percentage order by Age: \n" + processHelperAge(input, "D") + "\n");
 
+
     //String processHelperAge(input, "M");
     return result;
   }
@@ -183,6 +184,7 @@ public class DemoFutureQuery implements Query{
       }
       return result;
  }
+
   public String toString(){
     return "";
   }
