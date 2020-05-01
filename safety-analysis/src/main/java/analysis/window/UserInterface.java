@@ -76,7 +76,7 @@ public class UserInterface{
             if(r == null){
               System.out.println("ERROR HERE IN UI");
             }
-            String result = r.toString();
+            String result = r.toTextString();
             textLabel.setText(result);
          }
       });
@@ -99,10 +99,42 @@ public class UserInterface{
       q2Button.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
               String input = q2Input.getText();
-              String result = queryP.process(QNames.HIGHEST_CRIMES, input).toString();
+              Result r = queryP.process(QNames.HIGHEST_CRIMES, input);
+              if(r == null){
+                System.out.println("ERROR HERE IN UI");
+              }
+              String result = r.toTextString();
               textLabel.setText(result);
            }
         });
+
+
+        //For Query 7
+        JLabel q7Label = new JLabel("Insert Area ID: ");
+        q7Label.setBounds(10, 320, 100, 25); // x, y, width, height
+
+        JTextField q7Input = new JTextField("1", 4);
+        q7Input.setBounds(115, 320, 105, 25);
+
+        JButton q7Button = new JButton("OK");
+        q7Button.setActionCommand("OK");
+        q7Button.setBounds(280, 320, 80, 25);
+
+        controlPanel.add(q7Label);
+        controlPanel.add(q7Input);
+        controlPanel.add(q7Button);
+
+        q7Button.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                String input = q7Input.getText();
+                Result r = queryP.process(QNames.SAFETY_VAL, input);
+                if(r == null){
+                  System.out.println("ERROR HERE IN UI");
+                }
+                String result = r.toTextString();
+                textLabel.setText(result);
+             }
+          });
 
   }
 

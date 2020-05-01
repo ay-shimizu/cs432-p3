@@ -1,7 +1,7 @@
 package analysis;
 import analysis.window.UserInterface;
 import analysis.queries.QueryProcessor;
-import analysis.queries.QNames;
+import analysis.queries.*;
 
 //ref: http://mongodb.github.io/mongo-java-driver/4.0/driver/getting-started/quick-start/
 import com.mongodb.ConnectionString;
@@ -87,6 +87,10 @@ public class App
         QueryProcessor qp = new QueryProcessor(collectionC, collectionA);
 
         UserInterface ui = new UserInterface(qp);
+
+
+        // Query q = new SafetyValQuery(collectionC);
+        // q.process("12");
         // q.process(QNames.NUM_CRIMES);
 
         // // numCrimes(mongoClient, database, collection, "2010.");
