@@ -1,35 +1,24 @@
 package analysis.queries;
+
 import analysis.util.Helper;
 import analysis.util.Result;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-
-import com.mongodb.ServerAddress;
-
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
-
+import com.mongodb.client.AggregateIterable;
+import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Sorts.*;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Accumulators;
 import org.bson.Document;
 import java.util.Arrays;
-import com.mongodb.Block;
-import com.mongodb.DBObject;
-import com.mongodb.client.AggregateIterable;
-
-import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Projections.*;
-import com.mongodb.client.model.Aggregates;
-import static com.mongodb.client.model.Sorts.*;
-import com.mongodb.client.model.Accumulators;
-import com.mongodb.client.result.DeleteResult;
-import static com.mongodb.client.model.Updates.*;
-import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DecimalFormat;
 
 public class DemoFutureQuery implements Query{
   private MongoCollection<Document> collection;
+  private static DecimalFormat df2 = new DecimalFormat("#.##");
 
   public DemoFutureQuery(MongoCollection<Document> collectionIn){
     collection = collectionIn;
@@ -43,17 +32,18 @@ public class DemoFutureQuery implements Query{
       // System.out.println("ERROR HERE");
       return result;
     }
-    //String returnVal_M = processHelperGender(input, "M");
-    //String returnVal_F = processHelperGender(input, "F");
-    //String returnVal_I = processHelperGender(input, "I");
-    //String returnVal_O = processHelperGender(input, "O");
-    //String returnVal_D = processHelperGender(input, "D");
 
-    result.add("Year in (" + input + ") Arrest Type (M) percentage order by Age: \n" + processHelperGender(input, "M") "\n");
-    result.add("Year in (" + input + ") Arrest Type (F) percentage order by Age: \n" + processHelperGender(input, "F") "\n");
-    result.add("Year in (" + input + ") Arrest Type (I) percentage order by Age: \n" + processHelperGender(input, "I") "\n");
-    result.add("Year in (" + input + ") Arrest Type (O) percentage order by Age: \n" + processHelperGender(input, "O") "\n");
-    result.add("Year in (" + input + ") Arrest Type (D) percentage order by Age: \n" + processHelperGender(input, "D") "\n");
+    result.add("Year in (" + input + ") Arrest Type (M) num Arrest order by Gender: \n" + processHelperGender(input, "M") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (F) num Arrest order by Gender: \n" + processHelperGender(input, "F") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (I) num Arrest order by Gender: \n" + processHelperGender(input, "I") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (O) num Arrest order by Gender: \n" + processHelperGender(input, "O") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (D) num Arrest order by Gender: \n" + processHelperGender(input, "D") + "\n");
+
+    result.add("Year in (" + input + ") Arrest Type (M) percentage order by Age: \n" + processHelperAge(input, "M") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (F) percentage order by Age: \n" + processHelperAge(input, "F") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (I) percentage order by Age: \n" + processHelperAge(input, "I") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (O) percentage order by Age: \n" + processHelperAge(input, "O") + "\n");
+    result.add("Year in (" + input + ") Arrest Type (D) percentage order by Age: \n" + processHelperAge(input, "D") + "\n");
 
     //String processHelperAge(input, "M");
     return result;
@@ -62,23 +52,24 @@ public class DemoFutureQuery implements Query{
   public String processHelperGender(String input, String code){
     String result = "";
     AggregateIterable<Document> genderDocuments = processByGender(input, code);
-    List<ArrayList<String>> listGenderData = processByAge(genderDocuments);
+    List<ArrayList<String>> listGenderData = intoList(genderDocuments);
     for(int i = 0; i < listGenderData.size(); i++){
-        result += "Gender: (" + listGenderData.get(0) + "): "+ listGenderData.get(1) + " crime reports\n";
+        result += "Gender (" + listGenderData.get(i).get(0) + "): "+ listGenderData.get(i).get(1)
+        + " crime reports\n";
     }
     return result;
   }
 
-  public Stirng processHelperAge(String input, String code){
-    String reult = "";
+  public String processHelperAge(String input, String code){
+    String result = "";
     AggregateIterable<Document> ageDocuments = processByAge(input, code);
-    List<ArrayList<String>> listAgeData = processByAge(ageDocuments);
+    List<ArrayList<String>> listAgeData = intoList(ageDocuments);
     List<Double> range = calculateRange(listAgeData);
-    result += "0 ~ 10: " + (String) new DecimalFormat("#.##").format(range.get(0));
+    result += "0 ~ 10: " + df2.format(range.get(0)) + "%\n";
     for(int i = 1; i < range.size()-1; i++){
-        result += i + "1 ~ " + (i+1) + "0: " + range.get(i);
+        result += i + "1 ~ " + (i+1) + "0: " + df2.format(range.get(i)) + "%\n";
     }
-    result += "80+ : " + range.get(range.size()-1);
+    result += "80+ : " + df2.format(range.get(range.size()-1)) + "%\n";
     return result;
   }
 
@@ -105,7 +96,7 @@ public class DemoFutureQuery implements Query{
                 Aggregates.match(Filters.eq("Arrest Type Code", Arrestcode)),
                 Aggregates.project(fields(include("Arrest Type Code", "Sex Code"), excludeId())),
                 Aggregates.group("$Sex Code", Accumulators.sum("count", 1)),
-                Aggregates.sort(orderBy(descending("count"))),
+                Aggregates.sort(orderBy(descending("count")))
         )
     );
     return documents;
@@ -181,14 +172,14 @@ public class DemoFutureQuery implements Query{
       int total = 0;
       for(int i = 0; i < sum.size(); i++){
         total += sum.get(i);
-        System.out.println(i + ": " + sum.get(i));
+        //System.out.println(i + ": " + sum.get(i));
       }
-      System.out.println(total);
+      //System.out.println(total);
 
       List<Double> result = new ArrayList<Double>();
       for(int i = 0; i < sum.size(); i++){
-        result.add((double) sum.get(i)/total * 100);
-        System.out.println(i + ": " + result.get(i));
+        result.add((double)sum.get(i)/total * 100);
+        //System.out.println(i + ": " + result.get(i));
       }
       return result;
  }
