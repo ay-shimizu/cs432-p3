@@ -78,9 +78,4 @@ public class CommonCrimesQuery implements Query{
      }
    }
 
-
-     public String toString(){
-       return "";
-     }
-
 }

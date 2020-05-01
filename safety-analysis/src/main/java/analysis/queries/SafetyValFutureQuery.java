@@ -77,8 +77,4 @@ public class SafetyValFutureQuery implements Query{
       return result;
   }
 
-
-  public String toString(){
-    return "";
-  }
 }

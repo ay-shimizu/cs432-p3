@@ -24,7 +24,6 @@ public class DemoInfoQuery implements Query{
   }
 
   public Result process(String input, String option){
-    // String result = "";
     Result result = new Result();
 
     int flag = check(input);
@@ -76,7 +75,4 @@ public class DemoInfoQuery implements Query{
       }
     }
 
-    public String toString(){
-      return "";
-    }
 }

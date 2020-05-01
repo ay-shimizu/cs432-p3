@@ -29,7 +29,6 @@ public class DemoFutureQuery implements Query{
 
     if(!Helper.isValidYear(input)){
       result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019");
-      // System.out.println("ERROR HERE");
       return result;
     }
 

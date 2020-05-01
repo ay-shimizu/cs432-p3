@@ -42,31 +42,19 @@ public class SafetyValQuery implements Query{
         return result;
       }
 
-      String regString = "assault";
-
       Document regQuery = new Document();
         regQuery.append("$regex", year);
         regQuery.append("$options", "i");
-      //
-      // Document match = new Document();
-      //   match.append("$match",
-      //     new Document("AreaID",
-      //     new Document("$eq", input)));
 
       Document findQuery = new Document();
         findQuery.append("Date Occurred", regQuery);
-        // findQuery.append(match);
 
       int totalCrimes =  (int) collection.countDocuments(findQuery);
 
-      //ref: https://mongodb.github.io/mongo-java-driver/4.0/apidocs/mongodb-driver-sync/com/mongodb/client/FindIterable.html
-      // FindIterable<Document> docs = collection.find(findQuery);
+      int intV = Integer.parseInt(input);
 
       //ref: https://stackoverflow.com/questions/31643109/mongodb-aggregation-with-java-driver
       //ref: https://mongodb.github.io/mongo-java-driver/3.6/driver/tutorials/aggregation/
-
-      int intV = Integer.parseInt(input);
-
       AggregateIterable<Document> output = collection.aggregate(
                         Arrays.asList(
                                 Aggregates.match(Filters.regex("Date Occurred", year)),
@@ -77,16 +65,12 @@ public class SafetyValQuery implements Query{
                         )
                       );
 
-
-
-      // int i = 1;
       int total = 0;
       int violent = 0;
       int property = 0;
 
       int currCount = 0;
       for(Document d : output){
-        // System.out.println("asfjhaskjdfh");
         // System.out.println(d.toJson());
         String description = d.getString("Crime Description");
         currCount = d.getInteger("count");
@@ -97,11 +81,6 @@ public class SafetyValQuery implements Query{
           property += currCount;
         }
         total += currCount;
-
-        // System.out.println(description + " || " + isViolentCrime(description));
-        // String s = i + ")" + d.get("Area Name") + " (id." + d.get("_id") + "): " + d.get("count") + " crime reports";
-        // result.add(s);
-        // i++;
       }
 
       result.add("Year: " + year);
@@ -220,7 +199,4 @@ public class SafetyValQuery implements Query{
     return year;
   }
 
-  public String toString(){
-    return "";
-  }
 }

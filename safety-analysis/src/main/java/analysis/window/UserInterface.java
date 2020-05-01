@@ -290,7 +290,4 @@ public class UserInterface{
 
   }
 
-  public void printSomething(){
-    System.out.println("HEllo...");
-  }
 }

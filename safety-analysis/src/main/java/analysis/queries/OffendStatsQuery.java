@@ -102,8 +102,4 @@ public class OffendStatsQuery implements Query{
     return documents;
   }
 
-
-  public String toString(){
-    return "";
-  }
 }

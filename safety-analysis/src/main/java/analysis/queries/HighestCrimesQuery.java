@@ -34,9 +34,6 @@ public class HighestCrimesQuery implements Query{
         return result;
       }
 
-      //ref: https://stackoverflow.com/questions/31643109/mongodb-aggregation-with-java-driver
-      //ref: https://mongodb.github.io/mongo-java-driver/3.6/driver/tutorials/aggregation/
-
       AggregateIterable<Document> output = null;
       if(input.equals("")){
         //info from 2010-2019
@@ -70,7 +67,4 @@ public class HighestCrimesQuery implements Query{
       return result;
   }
 
-  public String toString(){
-    return "";
-  }
 }
