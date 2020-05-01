@@ -35,28 +35,23 @@ public class DemoFutureQuery implements Query{
   public Result process(String input, String option){
     Result result = new Result();
 
-    if(!Helper.isValidYear(input)){
-      result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019");
-      return result;
-    }
+    processHelperGender(input, "M", result);
+    processHelperGender(input, "F", result);
+    processHelperGender(input, "I", result);
+    processHelperGender(input, "O", result);
+    processHelperGender(input, "D", result);
 
-    result.add("Year in (" + input + ") Arrest Type (M) num Arrest order by Gender: \n" + processHelperGender(input, "M") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (F) num Arrest order by Gender: \n" + processHelperGender(input, "F") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (I) num Arrest order by Gender: \n" + processHelperGender(input, "I") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (O) num Arrest order by Gender: \n" + processHelperGender(input, "O") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (D) num Arrest order by Gender: \n" + processHelperGender(input, "D") + "\n");
-
-    result.add("Arrest Type (M) predict percentage order by Age top3: \n" + processHelperAge(input, "M") + "\n");
-    result.add("Arrest Type (F) predict percentage order by Age top3: \n" + processHelperAge(input, "F") + "\n");
-    result.add("Arrest Type (I) predict percentage order by Age top3: \n" + processHelperAge(input, "I") + "\n");
-    result.add("Arrest Type (O) predict percentage order by Age top3: \n" + processHelperAge(input, "O") + "\n");
-    result.add("Arrest Type (D) predict percentage order by Age top3: \n" + processHelperAge(input, "D") + "\n");
+    processHelperAge(input, "M", result);
+    processHelperAge(input, "F", result);
+    processHelperAge(input, "I", result);
+    processHelperAge(input, "O", result);
+    processHelperAge(input, "D", result);
 
     return result;
   }
 
-  public String processHelperGender(String input, String code){
-    String result = "";
+  public void processHelperGender(String input, String code, Result result){
+    String rs = "";
     AggregateIterable<Document> genderDocuments_2019 = processByGender("2019", code);
     AggregateIterable<Document> genderDocuments_2018 = processByGender("2017", code);
     List<ArrayList<String>> listGenderData_2019 = intoList(genderDocuments_2019);
@@ -72,32 +67,33 @@ public class DemoFutureQuery implements Query{
     double pIncrease_female = (double) (female_2019 - female_2018)/female_2018;
     double predict_female = (double) female_2019 + female_2019 * pIncrease_female;
 
-    result += "Male 2019: " + listGenderData_2019.get(0).get(1) + "    ";
-    result += "Percentage increase from 2018: " + df2.format(pIncrease_male* 100) + "%     ";
-    result += "Predit value: " + df2.format(predict_male) + "\n";
-
-    result += "Female 2019: " + listGenderData_2019.get(1).get(1) + "    ";
-    result += "Percentage increase from 2018: "+ df2.format(pIncrease_female* 100) + "%    ";
-    result += "Predit value: " + df2.format(predict_female) + "\n";
-
-    return result;
+    rs += "Arrest Type (" + code +") num Arrest order by Gender: \n";
+    rs += "(Male 2019): " + listGenderData_2019.get(0).get(1) + ";  ";
+    rs += "Percentage increase from 2018: " + df2.format(pIncrease_male* 100) + "%;  ";
+    rs += "Predit value: " + df2.format(predict_male) + "\n";
+    rs += "(Female 2019): " + listGenderData_2019.get(1).get(1) + "    ";
+    rs += "Percentage increase from 2018: "+ df2.format(pIncrease_female* 100) + "%    ";
+    rs += "Predit value: " + df2.format(predict_female) + "\n";
+    result.add(rs);
   }
 
-  public String processHelperAge(String input, String code){
-    String result = "";
+  public void processHelperAge(String input, String code, Result result){
+    String rs = "";
     AggregateIterable<Document> ageDocuments = processByAge(input, code);
     List<ArrayList<String>> listAgeData = intoList(ageDocuments);
     HashMap<String, Double> range = calculateRange(listAgeData);
     HashMap<String, Double> top3 = sortByValue(range);
     // print the sorted hashmap
+    rs += "Arrest Type (" + code + ") predict percentage order by Age top3: ";
     int i = 0;
     for(Map.Entry<String, Double> en : top3.entrySet()){
         //Entry<String, Double> en = top3.pollFirstEntry();
-        result += en.getKey() + " " + df2.format(en.getValue()) + "%\n";
+        rs += en.getKey() + " " + df2.format(en.getValue()) + "%\n";
         if(i == 2){break;}
         i++;
     }
-    return result;
+
+    result.add(rs);
   }
 
   //https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
