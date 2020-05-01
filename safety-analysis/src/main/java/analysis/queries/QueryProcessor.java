@@ -28,26 +28,15 @@ import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import analysis.queries.CommonCrimesQuery;
-import analysis.queries.DemoInfoQuery;
-import analysis.queries.DemoFutureQuery;
-import analysis.queries.OffendStatsQuery;
-import analysis.queries.HighestCrimesQuery;
-import analysis.queries.SafetyValQuery;
-
 public class QueryProcessor{
   private MongoCollection<Document> collectionCrime;
   private MongoCollection<Document> collectionArrest;
-  private String option = "";
+  private String option;
 
   public QueryProcessor(MongoCollection<Document> collCrimeIn, MongoCollection<Document> collArrestIn){
     collectionCrime = collCrimeIn;
     collectionArrest = collArrestIn;
   }
-
-  //public void setCollection(MongoCollection<Document> collectionIn){
-  //  collection = collectionIn;
-  //}
 
   public Result process(QNames type, String input){
     Result result = null;
@@ -55,9 +44,9 @@ public class QueryProcessor{
 
     switch(type){
       case NUM_CRIMES:
-          q = new NumCrimesQuery(collectionCrime);
-          option = "";
-          break;
+
+        q = new NumCrimesQuery(collectionCrime);
+        break;
 
       case COMMON_CRIMES_YEAR:
         q = new CommonCrimesQuery(collectionCrime);
@@ -93,7 +82,6 @@ public class QueryProcessor{
 
       case SAFETY_VAL:
         q = new SafetyValQuery(collectionCrime);
-
         break;
 
       case SAFETY_VAL_FUTURE:
@@ -111,36 +99,6 @@ public class QueryProcessor{
     // System.out.println(result.toString());
     return result;
   }
-
-  //
-  //
-  //
-  //   public String calculateSafety(String input){
-  //     String result = "";
-  //     //TO DO: Error check, input should be an Area ID
-  //
-  //     AggregateIterable<Document> output = collection.aggregate(
-  //         Arrays.asList(
-  //               Aggregates.match(Filters.regex("Date Occurred", input+".")),
-  //                 Aggregates.project(fields(include("Crime Code", "Crime Code Description"), excludeId())),
-  //                 Aggregates.group("$Crime Code", Accumulators.sum("count", 1), Accumulators.first("description", "$Crime Code Description")),
-  //                 Aggregates.sort(orderBy(descending("count")))
-  //         )
-  //       );
-  //
-  //       int i = 1;
-  //       for(Document d : output){
-  //         System.out.println(d.toJson());
-  //         //oof, inefficient
-  //         // result = result + i + ")" + d.get("Area Name") + " (id." + d.get("_id") + "): " + d.get("count") + " crime reports <br><br>";
-  //         // i++;
-  //       }
-  //
-  //       return result;
-  //
-  //   }
-  //
-
 
 
 }
