@@ -24,7 +24,7 @@ public class OffendStatsQuery implements Query{
     collection = collectionIn;
   }
 
-  public Result process(String input){
+  public Result process(String input, String option){
     Result result = new Result();
 
     if(!Helper.isValidYear(input)){

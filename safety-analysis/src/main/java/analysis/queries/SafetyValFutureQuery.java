@@ -42,23 +42,23 @@ public class SafetyValFutureQuery implements Query{
 
       SafetyValQuery baseQuery = new SafetyValQuery(collection);
 
-      Result y2019 = baseQuery.process(input);
+      Result y2019 = baseQuery.process(input, null);
       int value2019 = baseQuery.getValue();
 
       baseQuery.setYear("2018");
-      Result y2018 = baseQuery.process(input);
+      Result y2018 = baseQuery.process(input, null);
       int value2018 = baseQuery.getValue();
 
       baseQuery.setYear("2017");
-      Result y2017 = baseQuery.process(input);
+      Result y2017 = baseQuery.process(input, null);
       int value2017 = baseQuery.getValue();
 
       baseQuery.setYear("2016");
-      Result y2016 = baseQuery.process(input);
+      Result y2016 = baseQuery.process(input, null);
       int value2016 = baseQuery.getValue();
 
       baseQuery.setYear("2015");
-      Result y2015 = baseQuery.process(input);
+      Result y2015 = baseQuery.process(input, null);
       int value2015 = baseQuery.getValue();
 
       System.out.println(value2015 + " --> " + value2016 + " --> " +value2017 + " --> " + value2018 + " --> " + value2019);

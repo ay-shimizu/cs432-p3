@@ -31,7 +31,6 @@ import java.util.List;
 public class QueryProcessor{
   private MongoCollection<Document> collectionCrime;
   private MongoCollection<Document> collectionArrest;
-  private String option;
 
   public QueryProcessor(MongoCollection<Document> collCrimeIn, MongoCollection<Document> collArrestIn){
     collectionCrime = collCrimeIn;
@@ -41,10 +40,10 @@ public class QueryProcessor{
   public Result process(QNames type, String input){
     Result result = null;
     Query q = null;
+    String option = null;
 
     switch(type){
       case NUM_CRIMES:
-
         q = new NumCrimesQuery(collectionCrime);
         break;
 
@@ -88,7 +87,7 @@ public class QueryProcessor{
         q = new SafetyValFutureQuery(collectionCrime);
         break;
       default:
-        System.out.println("DEFAULT");
+        System.out.println("ERROR: Invalid Query Called");
     }
 
     if(q != null){
@@ -96,7 +95,7 @@ public class QueryProcessor{
     }else{
       result = new Result("ERROR: NULL VALUE");
     }
-    // System.out.println(result.toString());
+
     return result;
   }
 

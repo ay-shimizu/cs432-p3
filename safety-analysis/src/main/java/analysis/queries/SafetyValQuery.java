@@ -203,7 +203,7 @@ public class SafetyValQuery implements Query{
   public int getValue(){
     if(value == 0){
       System.out.println("Processing with default location: Area ID = 19");
-      process("1");
+      process("1", null);
     }
     return value;
   }
@@ -211,7 +211,7 @@ public class SafetyValQuery implements Query{
   public String getGrade(){
     if(grade.equals("")){
       System.out.println("Processing with default location: Area ID = 19");
-      process("1");
+      process("1", null);
     }
     return grade;
   }
