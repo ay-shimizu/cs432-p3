@@ -27,10 +27,15 @@ import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import analysis.queries.CommonCrimesQuery;
+import analysis.queries.DemoInfoQuery;
+import analysis.queries.DemoFutureQuery;
+import analysis.queries.OffendStatsQuery;
+
 public class QueryProcessor{
   private MongoCollection<Document> collectionCrime;
   private MongoCollection<Document> collectionArrest;
-  private String option;
+  private String option = "";
 
   public QueryProcessor(MongoCollection<Document> collCrimeIn, MongoCollection<Document> collArrestIn){
     collectionCrime = collCrimeIn;
@@ -46,10 +51,10 @@ public class QueryProcessor{
     Query q = null;
 
     switch(type){
-      case NUM_CRIMES:
-          q = new NumCrimesQuery(collectionCrime);
-          option = "";
-          break;
+      //case NUM_CRIMES:
+      //    q = new NumCrimesQuery(collectionCrime);
+      //    option = "";
+      //    break;
       case COMMON_CRIMES_YEAR:
           q = new CommonCrimesQuery(collectionCrime);
           option = "Date Occurred";
