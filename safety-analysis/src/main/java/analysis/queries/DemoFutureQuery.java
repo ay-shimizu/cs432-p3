@@ -11,10 +11,18 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Accumulators;
 import org.bson.Document;
+import java.util.*;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map.*;
+import java.util.Map;
+import java.util.LinkedList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class DemoFutureQuery implements Query{
   private MongoCollection<Document> collection;
@@ -38,25 +46,40 @@ public class DemoFutureQuery implements Query{
     result.add("Year in (" + input + ") Arrest Type (O) num Arrest order by Gender: \n" + processHelperGender(input, "O") + "\n");
     result.add("Year in (" + input + ") Arrest Type (D) num Arrest order by Gender: \n" + processHelperGender(input, "D") + "\n");
 
-    result.add("Year in (" + input + ") Arrest Type (M) percentage order by Age: \n" + processHelperAge(input, "M") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (F) percentage order by Age: \n" + processHelperAge(input, "F") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (I) percentage order by Age: \n" + processHelperAge(input, "I") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (O) percentage order by Age: \n" + processHelperAge(input, "O") + "\n");
-    result.add("Year in (" + input + ") Arrest Type (D) percentage order by Age: \n" + processHelperAge(input, "D") + "\n");
+    result.add("Arrest Type (M) predict percentage order by Age top3: \n" + processHelperAge(input, "M") + "\n");
+    result.add("Arrest Type (F) predict percentage order by Age top3: \n" + processHelperAge(input, "F") + "\n");
+    result.add("Arrest Type (I) predict percentage order by Age top3: \n" + processHelperAge(input, "I") + "\n");
+    result.add("Arrest Type (O) predict percentage order by Age top3: \n" + processHelperAge(input, "O") + "\n");
+    result.add("Arrest Type (D) predict percentage order by Age top3: \n" + processHelperAge(input, "D") + "\n");
 
-
-    //String processHelperAge(input, "M");
     return result;
   }
 
   public String processHelperGender(String input, String code){
     String result = "";
-    AggregateIterable<Document> genderDocuments = processByGender(input, code);
-    List<ArrayList<String>> listGenderData = intoList(genderDocuments);
-    for(int i = 0; i < listGenderData.size(); i++){
-        result += "Gender (" + listGenderData.get(i).get(0) + "): "+ listGenderData.get(i).get(1)
-        + " crime reports\n";
-    }
+    AggregateIterable<Document> genderDocuments_2019 = processByGender("2019", code);
+    AggregateIterable<Document> genderDocuments_2018 = processByGender("2017", code);
+    List<ArrayList<String>> listGenderData_2019 = intoList(genderDocuments_2019);
+    List<ArrayList<String>> listGenderData_2018 = intoList(genderDocuments_2018);
+
+    int male_2019 = Integer.parseInt(listGenderData_2019.get(0).get(1));
+    int female_2019 = Integer.parseInt(listGenderData_2019.get(1).get(1));
+    int male_2018 = Integer.parseInt(listGenderData_2018.get(0).get(1));
+    int female_2018 = Integer.parseInt(listGenderData_2018.get(1).get(1));
+
+    double pIncrease_male = (double) (male_2019 - male_2018)/male_2018;
+    double predict_male = (double) male_2019 + male_2019 * pIncrease_male;
+    double pIncrease_female = (double) (female_2019 - female_2018)/female_2018;
+    double predict_female = (double) female_2019 + female_2019 * pIncrease_female;
+
+    result += "Male 2019: " + listGenderData_2019.get(0).get(1) + "    ";
+    result += "Percentage increase from 2018: " + df2.format(pIncrease_male* 100) + "%     ";
+    result += "Predit value: " + df2.format(predict_male) + "\n";
+
+    result += "Female 2019: " + listGenderData_2019.get(1).get(1) + "    ";
+    result += "Percentage increase from 2018: "+ df2.format(pIncrease_female* 100) + "%    ";
+    result += "Predit value: " + df2.format(predict_female) + "\n";
+
     return result;
   }
 
@@ -64,14 +87,42 @@ public class DemoFutureQuery implements Query{
     String result = "";
     AggregateIterable<Document> ageDocuments = processByAge(input, code);
     List<ArrayList<String>> listAgeData = intoList(ageDocuments);
-    List<Double> range = calculateRange(listAgeData);
-    result += "0 ~ 10: " + df2.format(range.get(0)) + "%\n";
-    for(int i = 1; i < range.size()-1; i++){
-        result += i + "1 ~ " + (i+1) + "0: " + df2.format(range.get(i)) + "%\n";
+    HashMap<String, Double> range = calculateRange(listAgeData);
+    HashMap<String, Double> top3 = sortByValue(range);
+    // print the sorted hashmap
+    int i = 0;
+    for(Map.Entry<String, Double> en : top3.entrySet()){
+        //Entry<String, Double> en = top3.pollFirstEntry();
+        result += en.getKey() + " " + df2.format(en.getValue()) + "%\n";
+        if(i == 2){break;}
+        i++;
     }
-    result += "80+ : " + df2.format(range.get(range.size()-1)) + "%\n";
     return result;
   }
+
+  //https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
+  // function to sort hashmap by values
+  public static HashMap<String, Double> sortByValue(HashMap<String, Double> hm) {
+    // Create a list from elements of HashMap
+    List<Map.Entry<String, Double>> list =
+           new LinkedList<Map.Entry<String, Double> >(hm.entrySet());
+
+    // Sort the list
+    Collections.sort(list, new Comparator<Map.Entry<String, Double>>(){
+        public int compare(Map.Entry<String, Double> o1,
+                           Map.Entry<String, Double> o2){
+            return (o2.getValue()).compareTo(o1.getValue());
+        }
+
+    });
+
+    // put data from sorted list to hashmap
+    HashMap<String, Double> temp = new LinkedHashMap<String, Double>();
+    for (Map.Entry<String, Double> aa : list) {
+        temp.put(aa.getKey(), aa.getValue());
+    }
+    return temp;
+}
 
   public List<ArrayList<String>> intoList(AggregateIterable<Document> documents){
       List<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
@@ -104,7 +155,7 @@ public class DemoFutureQuery implements Query{
 
   public AggregateIterable<Document> processByAge(String input, String Arrestcode){
     Document regQuery = new Document();
-      regQuery.append("$regex", input);
+      regQuery.append("$regex", "2019");
       regQuery.append("$options", "i");
 
     AggregateIterable<Document> documents = collection.aggregate(
@@ -120,7 +171,7 @@ public class DemoFutureQuery implements Query{
   }
 
   // return a list of percentage value of each age range
-  public List<Double> calculateRange(List<ArrayList<String>> list){
+  public HashMap<String, Double>calculateRange(List<ArrayList<String>> list){
     List<Integer> sum = new ArrayList<Integer>();
     for(int i = 0; i < 9; i++){
       sum.add(0);
@@ -129,42 +180,34 @@ public class DemoFutureQuery implements Query{
     for(int i = 0; i < list.size(); i++){
       int value = Integer.parseInt(list.get(i).get(0));
       if(value < 11){
-        //System.out.println(value + ": "+list.get(i).get(1));
         int temp = sum.get(0) + Integer.parseInt(list.get(i).get(1));
         sum.set(0, temp);
       }
       else if(value < 21){
-      //  System.out.println(value + ": " +list.get(i).get(1));
         int temp = sum.get(1) + Integer.parseInt(list.get(i).get(1));
         sum.set(1, temp);
       }
       else if(value < 31){
-      //  System.out.println(value + ": " +list.get(i).get(1));
         int temp = sum.get(2) + Integer.parseInt(list.get(i).get(1));
         sum.set(2, temp);
       }
       else if(value < 41){
-      //  System.out.println(value + ": " +list.get(i).get(1));
         int temp = sum.get(3) + Integer.parseInt(list.get(i).get(1));
         sum.set(3, temp);
       }
       else if(value < 51){
-      //  System.out.println(value + ": " +list.get(i).get(1));
         int temp = sum.get(4) + Integer.parseInt(list.get(i).get(1));
         sum.set(4, temp);
       }
       else if(value < 61){
-      //  System.out.println(value + ": " +list.get(i).get(1));
         int temp = sum.get(5) + Integer.parseInt(list.get(i).get(1));
         sum.set(5, temp);
       }
       else if(value < 71){
-        //System.out.println(value + ": " +list.get(i).get(1));
         int temp = sum.get(6) + Integer.parseInt(list.get(i).get(1));
         sum.set(6, temp);
       }
       else{
-        //System.out.println(value + ": " +list.get(i).get(1));
         int temp = sum.get(7) + Integer.parseInt(list.get(i).get(1));
         sum.set(7, temp);
       }
@@ -172,15 +215,14 @@ public class DemoFutureQuery implements Query{
       int total = 0;
       for(int i = 0; i < sum.size(); i++){
         total += sum.get(i);
-        //System.out.println(i + ": " + sum.get(i));
       }
-      //System.out.println(total);
 
-      List<Double> result = new ArrayList<Double>();
-      for(int i = 0; i < sum.size(); i++){
-        result.add((double)sum.get(i)/total * 100);
-        //System.out.println(i + ": " + result.get(i));
+      HashMap<String, Double> result = new HashMap<String, Double>();
+      result.put("0 ~ 10: ", (double)sum.get(0)/total * 100);
+      for(int i = 1; i < sum.size()-1; i++){
+         result.put(i + "1 ~ " + (i+1) + "0: ", (double)sum.get(i)/total * 100);
       }
+      result.put("80+ : ", (double)sum.get(sum.size()-1)/total * 100);
       return result;
  }
 
