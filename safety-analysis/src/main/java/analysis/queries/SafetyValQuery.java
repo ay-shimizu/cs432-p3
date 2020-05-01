@@ -31,7 +31,7 @@ public class SafetyValQuery implements Query{
     year = s;
   }
 
-  public Result process(String input){
+  public Result process(String input, String option){
       Result result = new Result();
 
       if(!Helper.isValidAreaID(input)){
