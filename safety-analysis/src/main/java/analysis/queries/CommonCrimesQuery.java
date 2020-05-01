@@ -28,10 +28,10 @@ import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NumCrimesQuery implements Query{
+public class CommonCrimesQuery implements Query{
   private MongoCollection<Document> collection;
 
-  public NumCrimesQuery(MongoCollection<Document> collectionIn){
+  public CommonCrimesQuery(MongoCollection<Document> collectionIn){
     collection = collectionIn;
   }
 
@@ -45,23 +45,31 @@ public class NumCrimesQuery implements Query{
       return result;
     }
 
-    String regString = input + ".";
-
     Document regQuery = new Document();
-      regQuery.append("$regex", regString);
-      regQuery.append("$options", "i");
+        regQuery.append("$regex", input);
+        regQuery.append("$options", "i");
 
-    Document findQuery = new Document();
-      findQuery.append("Date Occurred", regQuery);
+      AggregateIterable<Document> output = collection.aggregate(
+          Arrays.asList(
+                  Aggregates.match(Filters.eq(option, regQuery)),
+                  Aggregates.project(fields(include("Crime Code", "Crime Code Description"), excludeId())),
+                  Aggregates.group("$Crime Code", Accumulators.sum("count", 1), Accumulators.first("Crime Code Description", "$Crime Code Description")),
+                  Aggregates.sort(orderBy(descending("count")))
+          )
+        );
 
-    int count =  (int) collection.countDocuments(findQuery);
+        result.add("Search by " + option " (" + input + ") : \n");
+        int i = 1;
+        for(Document d : output){
+           //System.out.println(d.toJson());
+           result.add(d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): " + d.get("count") + " crime reports\n");
+          i++;
+        }
+        return result;
+     }
 
-    // System.out.println("COUNT: " + count);
-    result.add("The total number of crime reported in " + input + " is: " + count);
-    return result;
-  }
+     public String toString(){
+       return "";
+     }
 
-  public String toString(){
-    return "";
-  }
 }
