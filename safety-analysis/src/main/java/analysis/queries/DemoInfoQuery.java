@@ -55,11 +55,11 @@ public class DemoInfoQuery implements Query{
       // System.out.println("ERROR HERE");
       return result;
     }
-      result.add("Search by " + option + " ("+ input + ") : \n");
+      result.add("Search by " + option + " ("+ input + ") : ");
       int i = 1;
       for(Document d : output){
          //System.out.println(d.toJson());
-         result.add(i + ") " + "Gender (" + d.get("_id") + "): " + d.get("count") + " crime reports\n");
+         result.add(i + ") " + "Gender (" + d.get("_id") + "): " + d.get("count") + " crime reports");
         i++;
       }
      return result;

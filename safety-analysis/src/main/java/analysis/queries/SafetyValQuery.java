@@ -95,8 +95,8 @@ public class SafetyValQuery implements Query{
       result.add("Safety Value: " + value);
       result.add("Safety Grade: " + grade);
 
-      System.out.println("Year " + year + "\nTotal in LA: " + totalCrimes + "\nTotal in area: " + total + "\nViolent: " + violent + "\nProperty: " + property);
-      System.out.println("Value: " + value + " = " + grade);
+      // System.out.println("Year " + year + "\nTotal in LA: " + totalCrimes + "\nTotal in area: " + total + "\nViolent: " + violent + "\nProperty: " + property);
+      // System.out.println("Value: " + value + " = " + grade);
       return result;
   }
 

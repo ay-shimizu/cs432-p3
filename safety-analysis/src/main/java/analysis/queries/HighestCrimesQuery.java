@@ -41,7 +41,8 @@ public class HighestCrimesQuery implements Query{
             Arrays.asList(
                     Aggregates.project(fields(include("Area ID", "Area Name"), excludeId())),
                     Aggregates.group("$Area ID", Accumulators.sum("count", 1), Accumulators.first("Area Name", "$Area Name")),
-                    Aggregates.sort(orderBy(descending("count")))
+                    Aggregates.sort(orderBy(descending("count"))),
+                    Aggregates.limit(10)
             )
           );
       }else{
@@ -51,12 +52,14 @@ public class HighestCrimesQuery implements Query{
                     Aggregates.match(Filters.regex("Date Occurred", input+".")),
                     Aggregates.project(fields(include("Area ID", "Area Name"), excludeId())),
                     Aggregates.group("$Area ID", Accumulators.sum("count", 1), Accumulators.first("Area Name", "$Area Name")),
-                    Aggregates.sort(orderBy(descending("count")))
+                    Aggregates.sort(orderBy(descending("count"))),
+                    Aggregates.limit(10)
             )
           );
 
       }
 
+      result.add("TOP 10 Locations with highest crime reported in " + input);
       int i = 1;
       for(Document d : output){
         // System.out.println(d.toJson());

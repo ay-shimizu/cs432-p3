@@ -36,11 +36,5 @@ public class App
 
         UserInterface ui = new UserInterface(qp);
 
-
-        // Query q = new SafetyValFutureQuery(collectionC);
-        // q.process("14");
-        // q.process(QNames.NUM_CRIMES);
-
-
     }
 }

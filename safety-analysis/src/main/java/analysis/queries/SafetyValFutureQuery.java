@@ -61,16 +61,17 @@ public class SafetyValFutureQuery implements Query{
       Result y2015 = baseQuery.process(input, null);
       int value2015 = baseQuery.getValue();
 
-      System.out.println(value2015 + " --> " + value2016 + " --> " +value2017 + " --> " + value2018 + " --> " + value2019);
+      // System.out.println(value2015 + " --> " + value2016 + " --> " +value2017 + " --> " + value2018 + " --> " + value2019);
 
       int diffTotal = (value2019-value2018) + (value2018 - value2017) + (value2017-value2016) + (value2016-value2015);
       int change = diffTotal/4;
-      System.out.println("Diff Total: " + diffTotal + " || " + diffTotal/4);
+      // System.out.println("Diff Total: " + diffTotal + " || " + diffTotal/4);
 
       int predicted = value2019 + change;
       String grade = baseQuery.getGrade(predicted);
-      System.out.println("The predicted score and value of Area " + input + ": " + predicted + " (" + grade + ")");
-      result.add("The predicted score and value of Area " + input + ": " + predicted + " (" + grade + ")");
+      // System.out.println("The predicted score and value of Area " + input + ": " + predicted + " (" + grade + ")");
+      result.add("The predicted score of Area " + input + ": " + predicted);
+      result.add("The predicted grade: " + grade);
 
       // System.out.println("Total in LA: " + totalCrimes + "\nTotal in area: " + total + "\nViolent: " + violent + "\nProperty: " + property);
       // System.out.println("Value: " + value + " = " + grade);
