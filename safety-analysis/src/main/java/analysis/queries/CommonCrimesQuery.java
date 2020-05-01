@@ -59,11 +59,11 @@ public class CommonCrimesQuery implements Query{
       // System.out.println("ERROR HERE");
       return result;
     }
-      result.add("Search by " + option + " (" + input + ") TOP 10 LIST: \n");
+      result.add("Search by " + option + " (" + input + ") TOP 10 LIST: ");
       int i = 1;
       for(Document d : output){
            //System.out.println(d.toJson());
-          result.add(i + ") " + d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): \n" + d.get("count") + " crime reports\n");
+          result.add(i + ") " + d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): \n" + d.get("count") + " crime reports");
           i++;
       }
       return result;
@@ -77,10 +77,5 @@ public class CommonCrimesQuery implements Query{
        return -1;
      }
    }
-
-
-     public String toString(){
-       return "";
-     }
 
 }

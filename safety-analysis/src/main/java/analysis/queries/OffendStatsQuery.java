@@ -51,6 +51,7 @@ public class OffendStatsQuery implements Query{
 
   public String getResult(List<ArrayList<String>> staticPoint){
     String data = "";
+
     data += "Max age: " + staticPoint.get(0).get(0) + "  \n";
     data += "Min age: " + staticPoint.get(staticPoint.size()-1).get(0) + "  \n";
 
@@ -101,8 +102,4 @@ public class OffendStatsQuery implements Query{
     return documents;
   }
 
-
-  public String toString(){
-    return "";
-  }
 }

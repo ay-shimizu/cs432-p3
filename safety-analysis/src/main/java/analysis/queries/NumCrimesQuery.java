@@ -36,12 +36,10 @@ public class NumCrimesQuery implements Query{
   }
 
   public Result process(String input, String option){
-    // String result = "";
     Result result = new Result();
 
     if(!Helper.isValidYear(input)){
       result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019");
-      // System.out.println("ERROR HERE");
       return result;
     }
 
@@ -61,7 +59,4 @@ public class NumCrimesQuery implements Query{
     return result;
   }
 
-  public String toString(){
-    return "";
-  }
 }

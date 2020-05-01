@@ -225,6 +225,7 @@ public class DemoFutureQuery implements Query{
       result.put("80+ : ", (double)sum.get(sum.size()-1)/total * 100);
       return result;
  }
+
   public String toString(){
     return "";
   }

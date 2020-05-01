@@ -6,6 +6,4 @@ public interface Query{
 
     public Result process(String input, String option);
 
-    public String toString();
-
 }
