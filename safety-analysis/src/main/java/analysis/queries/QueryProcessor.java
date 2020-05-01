@@ -49,7 +49,7 @@ public class QueryProcessor{
     switch(type){
       case NUM_CRIMES:
 
-        q = new NumCrimesQuery(collection);
+        q = new NumCrimesQuery(collectionCrime);
         break;
 
       case COMMON_CRIMES_YEAR:
@@ -63,7 +63,7 @@ public class QueryProcessor{
         break;
 
       case HIGHEST_CRIMES:
-        q = new HighestCrimesQuery(collection);
+        q = new HighestCrimesQuery(collectionCrime);
         break;
 
        case DEMO_INFO_YEAR:
@@ -85,7 +85,7 @@ public class QueryProcessor{
          break;
 
       case SAFETY_VAL:
-        q = new SafetyValQuery(collection);
+        q = new SafetyValQuery(collectionCrime);
         break;
 
       // case SAFETY_VAL_FUTURE:
@@ -96,7 +96,7 @@ public class QueryProcessor{
     }
 
     if(q != null){
-        result = q.process(input, option);
+        result = q.process(input);
     }else{
       result = new Result("ERROR: NULL VALUE");
     }

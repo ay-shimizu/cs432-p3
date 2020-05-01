@@ -35,6 +35,10 @@ public class DemoInfoQuery implements Query{
     collection = collectionIn;
   }
 
+  public Result process(String input){
+    return null; 
+  }
+
   public Result process(String input, String option){
     // String result = "";
     Result result = new Result();

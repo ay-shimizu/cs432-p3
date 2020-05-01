@@ -35,7 +35,7 @@ public class NumCrimesQuery implements Query{
     collection = collectionIn;
   }
 
-  public Result process(String input, String option){
+  public Result process(String input){
     // String result = "";
     Result result = new Result();
 
