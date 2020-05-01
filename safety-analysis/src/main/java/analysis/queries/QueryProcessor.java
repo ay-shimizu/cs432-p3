@@ -32,6 +32,8 @@ import analysis.queries.CommonCrimesQuery;
 import analysis.queries.DemoInfoQuery;
 import analysis.queries.DemoFutureQuery;
 import analysis.queries.OffendStatsQuery;
+import analysis.queries.HighestCrimesQuery;
+import analysis.queries.SafetyValQuery;
 
 public class QueryProcessor{
   private MongoCollection<Document> collectionCrime;
@@ -60,36 +62,36 @@ public class QueryProcessor{
         q = new CommonCrimesQuery(collectionCrime);
         option = "Date Occurred";
         break;
-        
+
        case COMMON_CRIMES_AREA:
         q = new CommonCrimesQuery(collectionCrime);
         option = "Area ID";
         break;
-        
+
       case HIGHEST_CRIMES:
-        q = new HighestCrimesQuery(collection);
+        q = new HighestCrimesQuery(collectionCrime);
         break;
-        
+
        case DEMO_INFO_YEAR:
           q = new DemoInfoQuery(collectionArrest);
           option = "Arrest Date";
           break;
-        
+
       case DEMO_INFO_AREA:
           q = new DemoInfoQuery(collectionArrest);
           option = "Area ID";
           break;
-        
+
       case DEMO_FUTURE:
          q = new DemoFutureQuery(collectionArrest);
          break;
-        
+
        case OFFEND_STATS:
          q = new OffendStatsQuery(collectionArrest);
          break;
-        
+
       case SAFETY_VAL:
-        q = new SafetyValQuery(collection);
+        q = new SafetyValQuery(collectionArrest);
         break;
 
       // case SAFETY_VAL_FUTURE:

@@ -63,7 +63,7 @@ public class CommonCrimesQuery implements Query{
       int i = 1;
       for(Document d : output){
            //System.out.println(d.toJson());
-          result.add(i + ") " + d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): " + d.get("count") + " crime reports\n");
+          result.add(i + ") " + d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): \n" + d.get("count") + " crime reports\n");
           i++;
       }
       return result;

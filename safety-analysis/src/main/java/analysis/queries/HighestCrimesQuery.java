@@ -26,7 +26,7 @@ public class HighestCrimesQuery implements Query{
     collection = collectionIn;
   }
 
-  public Result process(String input){
+  public Result process(String input, String option){
       Result result = new Result();
 
       if(!input.equals("") && !Helper.isValidYear(input)){
