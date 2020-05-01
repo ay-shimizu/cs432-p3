@@ -35,40 +35,36 @@ public class CommonCrimesQuery implements Query{
     collection = collectionIn;
   }
 
-  public Result process(String s){
-    return null;
-  }
-
   public Result process(String input, String option){
     // String result = "";
     Result result = new Result();
 
-    // if(!Helper.isValidYear(input)){
-    //   result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019");
-    //   // System.out.println("ERROR HERE");
-    //   return result;
-    // }
-    //
-    // Document regQuery = new Document();
-    //     regQuery.append("$regex", input);
-    //     regQuery.append("$options", "i");
-    //
-    //   AggregateIterable<Document> output = collection.aggregate(
-    //       Arrays.asList(
-    //               Aggregates.match(Filters.eq(option, regQuery)),
-    //               Aggregates.project(fields(include("Crime Code", "Crime Code Description"), excludeId())),
-    //               Aggregates.group("$Crime Code", Accumulators.sum("count", 1), Accumulators.first("Crime Code Description", "$Crime Code Description")),
-    //               Aggregates.sort(orderBy(descending("count")))
-    //       )
-    //     );
-    //
-    //     result.add("Search by " + option " (" + input + ") : \n");
-    //     int i = 1;
-    //     for(Document d : output){
-    //        //System.out.println(d.toJson());
-    //        result.add(d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): " + d.get("count") + " crime reports\n");
-    //       i++;
-    //     }
+    if(!Helper.isValidYear(input)){
+      result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019");
+      // System.out.println("ERROR HERE");
+      return result;
+    }
+
+    Document regQuery = new Document();
+        regQuery.append("$regex", input);
+        regQuery.append("$options", "i");
+
+      AggregateIterable<Document> output = collection.aggregate(
+          Arrays.asList(
+                  Aggregates.match(Filters.eq(option, regQuery)),
+                  Aggregates.project(fields(include("Crime Code", "Crime Code Description"), excludeId())),
+                  Aggregates.group("$Crime Code", Accumulators.sum("count", 1), Accumulators.first("Crime Code Description", "$Crime Code Description")),
+                  Aggregates.sort(orderBy(descending("count")))
+          )
+        );
+
+        result.add("Search by " + option " (" + input + ") : \n");
+        int i = 1;
+        for(Document d : output){
+           //System.out.println(d.toJson());
+           result.add(d.get("Crime Code Description") + " (Crime Code." + d.get("_id") + "): " + d.get("count") + " crime reports\n");
+          i++;
+        }
         return result;
      }
 

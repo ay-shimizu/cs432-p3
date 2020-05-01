@@ -96,7 +96,7 @@ public class QueryProcessor{
     }
 
     if(q != null){
-        result = q.process(input);
+        result = q.process(input, option);
     }else{
       result = new Result("ERROR: NULL VALUE");
     }
