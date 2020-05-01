@@ -88,9 +88,9 @@ public class QueryProcessor{
         q = new SafetyValQuery(collectionCrime);
         break;
 
-      // case SAFETY_VAL_FUTURE:
-      //   q = new SafetyValFuture(collection);
-        // break;
+      case SAFETY_VAL_FUTURE:
+        q = new SafetyValFutureQuery(collectionCrime);
+        break;
       default:
         System.out.println("DEFAULT");
     }
