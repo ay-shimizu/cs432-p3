@@ -1,35 +1,24 @@
 package analysis.queries;
+
 import analysis.util.Helper;
 import analysis.util.Result;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-
-import com.mongodb.ServerAddress;
-
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
-
+import com.mongodb.client.AggregateIterable;
+import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Sorts.*;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Accumulators;
 import org.bson.Document;
 import java.util.Arrays;
-import com.mongodb.Block;
-import com.mongodb.DBObject;
-import com.mongodb.client.AggregateIterable;
-
-import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Projections.*;
-import com.mongodb.client.model.Aggregates;
-import static com.mongodb.client.model.Sorts.*;
-import com.mongodb.client.model.Accumulators;
-import com.mongodb.client.result.DeleteResult;
-import static com.mongodb.client.model.Updates.*;
-import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DecimalFormat;
 
 public class OffendStatsQuery implements Query{
   private MongoCollection<Document> collection;
+  private static DecimalFormat df2 = new DecimalFormat("#.##");
 
   public OffendStatsQuery(MongoCollection<Document> collectionIn){
     collection = collectionIn;
@@ -45,31 +34,26 @@ public class OffendStatsQuery implements Query{
     }
 
     //Age statistic of each Arrest code "MFIOD" depends on the year user input
-    //String returnVal_M = processHelper(input, "M");
-    //String returnVal_F = processHelper(input, "F");
-    //String returnVal_I = processHelper(input, "I");
-    //String returnVal_D = processHelper(input, "D");
-    //String returnVal_O = processHelper(input, "O");
-
-    result.add("Year in" + input + "Arrest Type(M): " + processHelper(input, "M"));
-    result.add("Year in" + input + "Arrest Type(F): " + processHelper(input, "F"));
-    result.add("Year in" + input + "Arrest Type(I): " + processHelper(input, "I"));
-    result.add("Year in" + input + "Arrest Type(O): " + processHelper(input, "O"));
-    result.add("Year in" + input + "Arrest Type(D): " + processHelper(input, "D"));
+    result.add("Year in (" + input + ") Arrest Type(M): \n" + processHelper(input, "M"));
+    result.add("Year in (" + input + ") Arrest Type(F): \n" + processHelper(input, "F"));
+    result.add("Year in (" + input + ") Arrest Type(I): \n" + processHelper(input, "I"));
+    result.add("Year in (" + input + ") Arrest Type(O): \n" + processHelper(input, "O"));
+    result.add("Year in (" + input + ") Arrest Type(D): \n" + processHelper(input, "D"));
     return result;
   }
 
   public String processHelper(String input, String option){
       AggregateIterable<Document> documents = processData(input, option);
-      List<ArrayList<String>> listData = intoList(documents_M);
+      List<ArrayList<String>> listData = intoList(documents);
       String result = getResult(listData);
       return result;
   }
 
   public String getResult(List<ArrayList<String>> staticPoint){
     String data = "";
-    data += "Max age: " + staticPoint.get(0).get(0) + "  ";
-    data += "Min age: " + staticPoint.get(staticPoint.size()-1).get(0) + "  ";
+
+    data += "Max age: " + staticPoint.get(0).get(0) + "  \n";
+    data += "Min age: " + staticPoint.get(staticPoint.size()-1).get(0) + "  \n";
 
     double averageAge = 0.0;
     int total = 0;
@@ -81,10 +65,10 @@ public class OffendStatsQuery implements Query{
       total += num;
     }
     averageAge = (double) ageSum/total;
-    data += "Average age: " + String.valueOf((averageAge)) + "\n";
+    data += "Average age: " + String.valueOf(df2.format(averageAge)) + "\n";
 
-    System.out.println("Max: " + maxAge + " Min: " +  minAge);
-    System.out.println("Total: " + total + " Agesum: " +  ageSum + " Average:" + averageAge);
+    //System.out.println("Max: " + maxAge + " Min: " +  minAge);
+    //System.out.println("Total: " + total + " Agesum: " +  ageSum + " Average:" + averageAge);
 
     return data;
   }

@@ -35,40 +35,6 @@ import javax.swing.*;
 
 public class App
 {
-    public static void numCrimes(MongoClient mongoClient, MongoDatabase database, MongoCollection<Document> collection, String userInput){
-
-      Document regQuery = new Document();
-        regQuery.append("$regex", userInput);
-        regQuery.append("$options", "i");
-
-      Document findQuery = new Document();
-        findQuery.append("Date Occurred", regQuery);
-
-      int count =  (int) collection.countDocuments(findQuery);
-      System.out.println("COUNT: " + count);
-    }
-
-    public static void numCrimeByArea(MongoClient mongoClient, MongoDatabase database, MongoCollection<Document> collection, String userInput){
-
-      //ref: https://stackoverflow.com/questions/31643109/mongodb-aggregation-with-java-driver
-      //ref: https://mongodb.github.io/mongo-java-driver/3.6/driver/tutorials/aggregation/
-      AggregateIterable<Document> output = collection.aggregate(
-          Arrays.asList(
-                  Aggregates.project(fields(include("Area ID", "Area Name"), excludeId())),
-                  Aggregates.group("$Area ID", Accumulators.sum("count", 1), Accumulators.first("Area Name", "$Area Name")),
-                  Aggregates.sort(orderBy(descending("count")))
-          )
-        );
-
-        int i = 1;
-        for(Document d : output){
-          // System.out.println(d.toJson());
-          System.out.println(i + ")" + d.get("Area Name") + " (id." + d.get("_id") + "): " + d.get("count") + " crime reports\n");
-          i++;
-        }
-
-    }
-
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
@@ -101,9 +67,5 @@ public class App
         // Document query = new Document("_id", new Document("$lt", 100));
         // long count = collection.count()
 
-        // mostCommonTypeOfCrime(collectionC, "Date Occurred", "2010");
-        // mostCommonTypeOfCrime(collectionC, "Area Name", "Newton");
-        // demographicInfo(collectionA, "Date Occurred", "2010");
-        // demographicInfo(collectionA, "Area Name", "Newton");
     }
 }
