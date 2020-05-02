@@ -162,15 +162,15 @@ public class SafetyValQuery implements Query{
       result = "B-";
     }else if(value < 140){
       result = "C+";
-    }else if(value < 180){
+    }else if(value < 160){
       result = "C";
-    }else if(value < 200){
+    }else if(value < 180){
       result = "C-";
-    }else if(value < 220){
+    }else if(value < 200){
       result = "D+";
-    }else if(value < 240){
+    }else if(value < 220){
       result = "D";
-    }else if(value < 260){
+    }else if(value < 240){
       result = "D-";
     }else{
       result = "F";

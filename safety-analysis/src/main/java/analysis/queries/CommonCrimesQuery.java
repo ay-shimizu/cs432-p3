@@ -55,7 +55,7 @@ public class CommonCrimesQuery implements Query{
               )
             );
     }else{
-      result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019 or area code between 1 and 50");
+      result.add("ERROR: Invalid input. Please input in a year between 2010 and 2019 or area code between 1 and 21");
       // System.out.println("ERROR HERE");
       return result;
     }
@@ -71,7 +71,7 @@ public class CommonCrimesQuery implements Query{
    public int check(String input){
      if(Helper.isValidYear(input)){
        return 0;
-     }else if(Helper.isValidArea(input)){
+     }else if(Helper.isValidAreaID(input)){
        return 1;
      }else{
        return -1;

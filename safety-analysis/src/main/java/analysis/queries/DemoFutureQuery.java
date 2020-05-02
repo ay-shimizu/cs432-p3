@@ -35,11 +35,11 @@ public class DemoFutureQuery implements Query{
   public Result process(String input, String option){
     Result result = new Result();
 
-    processHelperGender(input, "M", result);
-    processHelperGender(input, "F", result);
-    processHelperGender(input, "I", result);
-    processHelperGender(input, "O", result);
-    processHelperGender(input, "D", result);
+    processHelperGender(input, "M", result); //Misdemeanor
+    processHelperGender(input, "F", result); //Felony
+    processHelperGender(input, "I", result); //Infraction
+    processHelperGender(input, "O", result); //Dependent
+    processHelperGender(input, "D", result); //Other
 
     processHelperAge(input, "M", result);
     processHelperAge(input, "F", result);
